@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <!-- fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,800,800i&display=swap" rel="stylesheet">
+    <!-- CSS styling -->
+    <style>
+
+      body {
+        min-height: 100%;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background: rgb(218, 116, 88) fixed;
+
+      }
+
+      #container {
+        margin: 0 auto;
+        display: block;
+        width: 50%;
+        text-align: center;
+        border: solid black 2px;
+        border-radius: 25px;
+        background: white;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 20px;
+        font-weight: 800;
+      }
+
+      #B {
+        margin: 0 auto;
+        padding-bottom: 30px;
+        display: inline-block;
+        text-align: left;
+        font-size: 15px;
+        font-weight: 400;
+      }
+
+      #icon {
+        width
+      }
+    </style>
+
+</head>
+
+<body>
+    <div id="container">
+
+      <h1>IT202 Weather Report</h1>
+      <input id="zip" type="text" name="zip">
+      <button id="btn" type="button"><strong>REQUEST WEATHER</strong></button>
+      <br><br>
+
+      <div id="icon"></div>
+      <div id="B"></div>
+    </div>
+
+</body>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+  $("button").click(function(){
+    var zip = $("#zip").val();
+
+    if (zip != '') {
+
+      $.ajax({
+        type: "GET",
+        url: "ajax-weather.php",
+        data: "zip=" + zip,
+
+        beforeSend: function(){
+        $("#B").html("Loading weather report...");
+        },
+
+        error: function(xhr, status, error){
+        alert("Error Message: \r\nNumeric code is: " + xhr.status + " \r\nError is " + error);
+        },
+
+        success: function(result){
+        r = JSON.parse(result);
+        res = "<br><strong>City:</strong> " + r.name + " " +
+              "<br><strong>Temperature: </strong>" + r.main.temp + "&deg;C " +
+              "<br><strong>Weather: </strong>" + r.weather[0].main + " " +
+              "<br><strong>Description: </strong>" + r.weather[0].description + " " +
+              "<br><strong>Humidity: </strong>" + r.main.humidity + " " +
+              "<br><strong>Wind speed: </strong>" + r.wind.speed + " " +
+              "<br><strong>Sunrise/epoch: </strong>" + r.sys.sunrise + " " +
+              "<br>";
+
+        $("#B").html(res);
+        // icon
+        $("#icon").html("<img src=\"http://openweathermap.org/img/wn/" + r.weather[0].icon + "@2x.png\">");
+        }
+
+      });
+
+    };
+
+  });
+});
+
+</script>
+
+</html>
